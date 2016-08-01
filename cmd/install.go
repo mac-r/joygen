@@ -32,21 +32,20 @@ var installCmd = &cobra.Command{
     Long:  `Details:
   Initial set of templates is introduced at https://github.com/mac-r/joygen-templates.
   You can easily create your own by forking it and providing your github user name.
-  Templates will be installed at ~/.joygen/joygen-templates.
-    `,
+  Templates will be installed at ` + JoygenTemplatesPath + ".",
     Run: func(cmd *cobra.Command, args []string) {
         if RewriteFolder == true {
-          coreDirStatus, _ := exists("~/.joygen/")
-          if coreDirStatus == false { exec.Command("sh", "-c", "mkdir ~/.joygen").Output() }
+          coreDirStatus, _ := exists(JoygenConfigPath)
+          if coreDirStatus == false { exec.Command("sh", "-c", "mkdir " + JoygenConfigPath).Output() }
           if coreDirStatus == true {
-            templatesDirStatus, _ := exists("~/.joygen/joygen-templates")
+            templatesDirStatus, _ := exists(JoygenTemplatesPath)
             if templatesDirStatus == true {
-              exec.Command("sh", "-c", "rm -rf ~/.joygen/joygen-templates").Output()
+              exec.Command("sh", "-c", "rm -rf " + JoygenTemplatesPath).Output()
             }
           }
-          exec.Command("sh", "-c", "mkdir ~/.joygen/joygen-templates").Output()
-          fmt.Println("Cleaned up templates folder at ~/.joygen/joygen-templates. Fetching templates from "+ GithubUser +"/joygen-templates...")
-          _, err := exec.Command("sh", "-c", "git clone git@github.com:" + GithubUser + "/joygen-templates.git ~/.joygen/joygen-templates").Output()
+          exec.Command("sh", "-c", "mkdir " + JoygenTemplatesPath).Output()
+          fmt.Println("Cleaned up templates folder at " + JoygenTemplatesPath + ". Fetching templates from "+ GithubUser +"/joygen-templates...")
+          _, err := exec.Command("sh", "-c", "git clone git@github.com:" + GithubUser + "/joygen-templates.git " + JoygenTemplatesPath).Output()
           if err == nil {
             fmt.Println("Your local templates are updated. Yay! :)")
           } else {
